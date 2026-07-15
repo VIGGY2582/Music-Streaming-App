@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicApp - Auth</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-color: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --error: #ef4444;
+            --success: #22c55e;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% -20%, #1e3a8a, var(--bg-color));
+        }
+
+        .auth-container {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            width: 400px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 16px;
+            top: 15px;
+            color: var(--text-muted);
+            font-size: 15px;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus ~ label,
+        .form-group input:not(:placeholder-shown) ~ label {
+            top: -10px;
+            left: 12px;
+            font-size: 12px;
+            background: var(--bg-color);
+            padding: 0 6px;
+            color: var(--primary);
+            border-radius: 4px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            min-height: 20px;
+        }
+        .message.error { color: var(--error); }
+        .message.success { color: var(--success); }
+
+        #register-form { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="header">
+            <h1>MusicApp</h1>
+            <p>Listen to your favorite tunes</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" id="tab-login" onclick="switchTab('login')">Login</div>
+            <div class="tab" id="tab-register" onclick="switchTab('register')">Register</div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <input type="email" id="login-email" placeholder=" " required>
+                <label>Email Address</label>
+            </div>
+            <div class="form-group">
+                <input type="password" id="login-password" placeholder=" " required>
+                <label>Password</label>
+            </div>
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <input type="text" id="reg-username" placeholder=" " required>
+                <label>Username</label>
+            </div>
+            <div class="form-group">
+                <input type="email" id="reg-email" placeholder=" " required>
+                <label>Email Address</label>
+            </div>
+            <div class="form-group">
+                <input type="password" id="reg-password" placeholder=" " required>
+                <label>Password</label>
+            </div>
+            <button type="submit" class="btn">Create Account</button>
+        </form>
+
+        <div id="status-message" class="message"></div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const msg = document.getElementById('status-message');
+            msg.textContent = '';
+            msg.className = 'message';
+
+            if (tab === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('tab-register').classList.remove('active');
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('register-form').style.display = 'none';
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('tab-login').classList.remove('active');
+                document.getElementById('register-form').style.display = 'block';
+                document.getElementById('login-form').style.display = 'none';
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const msg = document.getElementById('status-message');
+            
+            msg.textContent = 'Authenticating...';
+            msg.className = 'message';
+
+            try {
+                const res = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const text = await res.text();
+                if(text === 'Login Successful') {
+                    msg.textContent = text + '! Welcome back.';
+                    msg.className = 'message success';
+                } else {
+                    msg.textContent = text || 'Invalid credentials';
+                    msg.className = 'message error';
+                }
+            } catch (err) {
+                msg.textContent = 'Error connecting to server';
+                msg.className = 'message error';
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const msg = document.getElementById('status-message');
+            
+            msg.textContent = 'Creating account...';
+            msg.className = 'message';
+
+            try {
+                const res = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+                const text = await res.text();
+                if(text === 'User Registered') {
+                    msg.textContent = text + '! You can now login.';
+                    msg.className = 'message success';
+                    setTimeout(() => switchTab('login'), 2000);
+                } else {
+                    msg.textContent = text || 'Registration failed';
+                    msg.className = 'message error';
+                }
+            } catch (err) {
+                msg.textContent = 'Error connecting to server';
+                msg.className = 'message error';
+            }
+        }
+    </script>
+</body>
+</html>
