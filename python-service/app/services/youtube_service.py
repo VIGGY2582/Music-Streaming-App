@@ -24,12 +24,14 @@ class YouTubeService:
 
             for video in result["entries"]:
 
-                songs.append({
-                    "videoId": video.get("id"),
-                    "title": video.get("title"),
-                    "artist": video.get("channel"),
-                    "thumbnail": video.get("thumbnails", [{}])[-1].get("url"),
-                    "duration": video.get("duration")
-                })
+                songs.append(
+                    Song(
+                        videoId=video.get("id"),
+                        title=video.get("title"),
+                        artist=video.get("channel"),
+                        thumbnail=video.get("thumbnails", [{}])[-1].get("url"),
+                        duration=str(video.get("duration"))
+                    )
+                )
 
             return songs
