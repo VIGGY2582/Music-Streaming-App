@@ -35,3 +35,28 @@ class YouTubeService:
                 )
 
             return songs
+
+    def get_stream(self, video_id: str):
+
+        url = f"https://www.youtube.com/watch?v={video_id}"
+
+        ydl_opts = {
+            "quiet": True,
+            "no_warnings": True,
+            "format": "bestaudio/best"
+        }
+
+        with YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(
+                url,
+                download=False
+            )
+
+            return {
+                "videoId": info.get("id"),
+                "title": info.get("title"),
+                "artist": info.get("channel"),
+                "thumbnail": info.get("thumbnail"),
+                "duration": info.get("duration"),
+                "streamUrl": info.get("url")
+            }
